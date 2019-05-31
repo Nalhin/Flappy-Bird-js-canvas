@@ -36,7 +36,7 @@ class Bird {
     }
     updatePosition() {
 
-        this.deltaTime < 0.5 ? this.deltaTime += (1 / 30) : null;
+        this.deltaTime < 0.6 ? this.deltaTime += (1 / 10) : null;
         this.y -= this.vert * this.deltaTime;
         this.vert -= this.gravity * this.deltaTime;
     }
@@ -48,17 +48,21 @@ class Bird {
     checkPosition() {
         this.y > floor.y - this.height ? isGame = false : null;
     }
+    checkCollision(pipe) {
+        (this.x > pipe.x && this.x < pipe.x + pipe.width) &&
+                 !(this.y > pipe.y - pipe.space && this.y < pipe.y-this.height) ? isGame=false: null;
+    }
 }
 
 class Pipe {
     constructor(x, y, width, heightBottom, heightTop, space, speed) {
-        this.space = space;
-        this.heightBottom = Math.floor(Math.random() * (canvas.height / 2 - canvas.height / 8 + 1)) + canvas.height / 8;
-        this.heightTop = canvas.height - this.heightBottom - this.space;
-        this.x = x;
-        this.y = 0;
-        this.width = width;
-        this.speed = speed;
+        this.space = 140;
+        this.heightBottom = 400;
+        this.heightTop = 300;
+        this.x = x;         //lower pipe position
+        this.y = Math.floor(Math.random() * (canvas.height * 3 / 5 - canvas.height * 1 / 2 + 1)) + canvas.height * 1 / 2;
+        this.width = 80;
+        this.speed = 2;
         this.imageTop = new Image();
         this.imageTop.src = 'images/pipeTop.png';
         this.imageBottom = new Image();
@@ -66,14 +70,14 @@ class Pipe {
     }
     drawPipe() {
         ctx.beginPath();
-        ctx.drawImage(this.imageTop, this.x, this.y);
-        ctx.drawImage(this.imageBottom, this.x, this.y);
+        ctx.drawImage(this.imageTop, this.x, this.y - this.space - this.heightTop, this.width, this.heightTop);
+        ctx.drawImage(this.imageBottom, this.x, this.y, this.width, this.heightBottom);
     }
     changePosition() {
         this.x -= this.speed;
     }
     checkPosition(i) {
-        this.x + this.width < 0 ? pipes[i] = new Pipe() : null;
+        this.x + this.width < 0 ? pipes[i] = new Pipe(canvas.width) : null;
     }
 
 }
@@ -105,34 +109,35 @@ class Floor {
 function gameLoop() {
 
     background.drawBackground();
-    bird.drawBird();
-    floor.changePosition();
-    floor.drawFloor();
+
 
     if (isGame) {
 
-
         bird.updatePosition();
         bird.checkPosition();
-        for (let i = 0; i < 2; i++) {
-            // pipes[i].drawPipe();
-            // pipes[i].changePosition();
-            // pipes[i].checkPosition(i);
-        }
-
+        
     }
+    for (let i = 0; i < 2; i++) {
+        pipes[i].drawPipe();
+        pipes[i].changePosition();
+        pipes[i].checkPosition(i);
+        bird.checkCollision(pipes[i])
+    }
+    bird.drawBird();
+    floor.changePosition();
+    floor.drawFloor();
     window.requestAnimationFrame(gameLoop);
 }
 
 function newGame() {
     background = new Background(canvas.width, canvas.height, 'lightgreen')
-    bird = new Bird(200, canvas.width / 2 - 50, 50, 40, 1, 20, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
+    bird = new Bird(200, canvas.width / 2 - 50, 50, 40, 1, 12, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
     floor = new Floor(0, canvas.height - 100, canvas.width * 2, 120, -3) //(x, y, width, height, dx)
     isGame = true;
-    // pipes = [];
+    pipes = [];
 
-    // pipes[0] = new Pipe(0,200,60,); //x, y, width, heightTop, space, speed
-    //  pipes[1] = new Pipe(); //x, y, width,  space, speed
+    pipes[0] = new Pipe(canvas.width * 2); //x, y, width, heightTop, space, speed
+    pipes[1] = new Pipe(canvas.width * 2.6); //x, y, width,  space, speed
 
 }
 
