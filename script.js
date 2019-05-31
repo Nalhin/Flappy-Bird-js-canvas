@@ -7,14 +7,13 @@ class Background {
     constructor(width, height, backgroundColor) {
         this.width = width;
         this.height = height;
-        this.background= new Image();
-        this.background.src='images/background.png';
+        this.background = new Image();
+        this.background.src = 'images/background.png';
     }
     drawBackground() {
         ctx.clearRect(0, 0, this.width, this.height) //clears board
         ctx.fillStyle = this.backgroundColor;
-        ctx.drawImage(this.background, 0, 0,canvas.width,canvas.height);
-        //ctx.fillRect(0, 0, this.width, this.height);
+        ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
     }
 }
 
@@ -28,14 +27,12 @@ class Bird {
         this.jump = jumpSpeed;
         this.vert = verticalSpeed;
         this.deltaTime = 1;
-        this.image=new Image();
+        this.image = new Image();
         this.image.src = 'images/bird.png';
     }
     drawBird() {
         ctx.beginPath();
-        ctx.drawImage(this.image, this.x, this.y,this.width,this.height);
-        //ctx.fillStyle = 'yellow';
-        //ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
     updatePosition() {
 
@@ -59,9 +56,9 @@ class Pipe {
         this.y = 0;
         this.width = width;
         this.speed = speed;
-        this.imageTop=new Image();
+        this.imageTop = new Image();
         this.imageTop.src = 'images/pipeTop.png';
-        this.imageBottom=new Image();
+        this.imageBottom = new Image();
         this.imageBottom.src = 'images/pipeBottom.png';
     }
     drawPipe() {
@@ -78,27 +75,52 @@ class Pipe {
 
 }
 
+class Floor {
+    constructor(x, y, width, height, dx) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.width = width;
+        this.height = height;
+        this.image = new Image();
+        this.image.src = 'images/bottom.png';
+    }
+    drawFloor() {
+        ctx.beginPath();
+        ctx.drawImage(this.image, this.x, this.y,this.height,this.width);
+
+    }
+    changePosition() {
+        this.x +=this.dx;
+        this.x <-canvas.width ? this.x=0:null;
+    }
+
+
+}
 
 
 function gameLoop() {
     background.drawBackground();
+    floor.drawFloor()
+    floor.changePosition();
     bird.drawBird();
     bird.updatePosition();
     for (let i = 0; i < 2; i++) {
         // pipes[i].drawPipe();
-       // pipes[i].changePosition();
-       // pipes[i].checkPosition(i);
+        // pipes[i].changePosition();
+        // pipes[i].checkPosition(i);
     }
     window.requestAnimationFrame(gameLoop);
 }
 
 function newGame() {
     background = new Background(canvas.width, canvas.height, 'lightgreen')
-    bird = new Bird(200, 200, 50, 40, 1, 20, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
-   // pipes = [];
+    bird = new Bird(200, canvas.width/2-50, 50, 40, 1, 20, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
+    floor = new Floor(0,canvas.height-100,120,canvas.width*2,-3) //(x, y, width, height, dx)
+    // pipes = [];
 
-   // pipes[0] = new Pipe(0,200,60,); //x, y, width, heightTop, space, speed
-   //  pipes[1] = new Pipe(); //x, y, width,  space, speed
+    // pipes[0] = new Pipe(0,200,60,); //x, y, width, heightTop, space, speed
+    //  pipes[1] = new Pipe(); //x, y, width,  space, speed
 
 }
 
