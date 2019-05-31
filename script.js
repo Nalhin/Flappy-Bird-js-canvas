@@ -1,7 +1,7 @@
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-let bird, pipes;
+let bird, pipes,game,floor;
 
 class Game {
     constructor(score) {
