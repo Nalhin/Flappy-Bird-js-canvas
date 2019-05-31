@@ -1,7 +1,7 @@
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-let bird, pipes;
+let bird, pipes, isGame;
 
 class Background {
     constructor(width, height, backgroundColor) {
@@ -45,6 +45,9 @@ class Bird {
         this.deltaTime = 0;
         this.vert = this.jump;
     }
+    checkPosition() {
+        this.y > floor.y - this.height ? isGame = false : null;
+    }
 }
 
 class Pipe {
@@ -87,12 +90,12 @@ class Floor {
     }
     drawFloor() {
         ctx.beginPath();
-        ctx.drawImage(this.image, this.x, this.y,this.height,this.width);
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 
     }
     changePosition() {
-        this.x +=this.dx;
-        this.x <-canvas.width ? this.x=0:null;
+        this.x += this.dx;
+        this.x < -canvas.width ? this.x = 0 : null;
     }
 
 
@@ -100,23 +103,32 @@ class Floor {
 
 
 function gameLoop() {
+
     background.drawBackground();
-    floor.drawFloor()
-    floor.changePosition();
     bird.drawBird();
-    bird.updatePosition();
-    for (let i = 0; i < 2; i++) {
-        // pipes[i].drawPipe();
-        // pipes[i].changePosition();
-        // pipes[i].checkPosition(i);
+    floor.changePosition();
+    floor.drawFloor();
+
+    if (isGame) {
+
+
+        bird.updatePosition();
+        bird.checkPosition();
+        for (let i = 0; i < 2; i++) {
+            // pipes[i].drawPipe();
+            // pipes[i].changePosition();
+            // pipes[i].checkPosition(i);
+        }
+
     }
     window.requestAnimationFrame(gameLoop);
 }
 
 function newGame() {
     background = new Background(canvas.width, canvas.height, 'lightgreen')
-    bird = new Bird(200, canvas.width/2-50, 50, 40, 1, 20, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
-    floor = new Floor(0,canvas.height-100,120,canvas.width*2,-3) //(x, y, width, height, dx)
+    bird = new Bird(200, canvas.width / 2 - 50, 50, 40, 1, 20, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
+    floor = new Floor(0, canvas.height - 100, canvas.width * 2, 120, -3) //(x, y, width, height, dx)
+    isGame = true;
     // pipes = [];
 
     // pipes[0] = new Pipe(0,200,60,); //x, y, width, heightTop, space, speed
