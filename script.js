@@ -1,7 +1,20 @@
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-let bird, pipes, isGame;
+let bird, pipes;
+
+class Game {
+    constructor(score) {
+        this.score = score;
+        this.isGame = true;
+    }
+    drawScore() {
+        ctx.font = '60px Press';
+        ctx.fillStyle = 'red';
+        ctx.fillText(this.score, canvas.width / 2 - 35, 200);
+    }
+
+}
 
 class Background {
     constructor(width, height, backgroundColor) {
@@ -14,8 +27,10 @@ class Background {
         ctx.clearRect(0, 0, this.width, this.height) //clears board
         ctx.fillStyle = this.backgroundColor;
         ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
     }
 }
+
 
 class Bird {
     constructor(y, x, width, height, gravity, jumpSpeed, verticalSpeed) {
@@ -29,10 +44,12 @@ class Bird {
         this.deltaTime = 1;
         this.image = new Image();
         this.image.src = 'images/bird.png';
+
     }
     drawBird() {
         ctx.beginPath();
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+
     }
     updatePosition() {
 
@@ -46,11 +63,11 @@ class Bird {
         this.vert = this.jump;
     }
     checkPosition() {
-        this.y > floor.y - this.height ? isGame = false : null;
+        this.y > floor.y - this.height ? game.isGame = false : null;
     }
     checkCollision(pipe) {
         (this.x > pipe.x && this.x < pipe.x + pipe.width) &&
-                 !(this.y > pipe.y - pipe.space && this.y < pipe.y-this.height) ? isGame=false: null;
+            !(this.y > pipe.y - pipe.space - 6 && this.y < pipe.y - this.height + 6) ? game.isGame = false : null;
     }
 }
 
@@ -78,6 +95,8 @@ class Pipe {
     }
     checkPosition(i) {
         this.x + this.width < 0 ? pipes[i] = new Pipe(canvas.width) : null;
+
+        game.isGame? this.x === bird.x ? game.score++ : null :null;
     }
 
 }
@@ -109,13 +128,11 @@ class Floor {
 function gameLoop() {
 
     background.drawBackground();
-
-
-    if (isGame) {
+    if (game.isGame) {
 
         bird.updatePosition();
         bird.checkPosition();
-        
+
     }
     for (let i = 0; i < 2; i++) {
         pipes[i].drawPipe();
@@ -126,6 +143,7 @@ function gameLoop() {
     bird.drawBird();
     floor.changePosition();
     floor.drawFloor();
+    game.drawScore();
     window.requestAnimationFrame(gameLoop);
 }
 
@@ -133,7 +151,7 @@ function newGame() {
     background = new Background(canvas.width, canvas.height, 'lightgreen')
     bird = new Bird(200, canvas.width / 2 - 50, 50, 40, 1, 12, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
     floor = new Floor(0, canvas.height - 100, canvas.width * 2, 120, -3) //(x, y, width, height, dx)
-    isGame = true;
+    game = new Game(0);
     pipes = [];
 
     pipes[0] = new Pipe(canvas.width * 2); //x, y, width, heightTop, space, speed
