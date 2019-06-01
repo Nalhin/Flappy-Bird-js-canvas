@@ -24,13 +24,12 @@ class Game {
         const num = this.score.toString();
         for (let i = 0; i < num.length; i++)
             ctx.drawImage(spritesheet, this.numberTab[num[i]][0], this.numberTab[num[i]][1], 23, 35, 170 + i * 25, 180, 23, 35);
-        // }
-        // ctx.font = '60px Press';
-        //ctx.fillStyle = 'red';
-        //ctx.fillText(this.score, canvas.width / 2 - 35, 200);
     }
     drawGameOver() {
         ctx.drawImage(spritesheet, 785, 114, 202, 56, 100, 300, 202, 56);   // last 2 -(x, y)
+    }
+    addScore() {
+        this.score++;
     }
 }
 
@@ -38,8 +37,7 @@ class Background {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        // this.background = new Image();
-        // this.background.src = 'images/background.png';
+
     }
     drawBackground() {
         ctx.clearRect(0, 0, this.width, this.height) //clears board
@@ -69,20 +67,35 @@ class Bird {
             case 0:
             case 1:
             case 2:
-                ctx.drawImage(spritesheet, 6, 982, 33, 23, this.x, this.y, this.width, this.height);
+                //  ctx.drawImage(spritesheet, 6, 982, 33, 23, this.x, this.y, this.width, this.height);
+                this.drawBirdPosition(6, 982);
                 break;
             case 3:
             case 4:
             case 5:
-                ctx.drawImage(spritesheet, 62, 982, 33, 23, this.x, this.y, this.width, this.height);
+                this.drawBirdPosition(62, 982);
+                // ctx.drawImage(spritesheet, 62, 982, 33, 23, this.x, this.y, this.width, this.height);
                 break;
             case 6:
             case 7:
             case 8:
-                ctx.drawImage(spritesheet, 118, 982, 33, 23, this.x, this.y, this.width, this.height);
+                this.drawBirdPosition(118, 982)
+                //   ctx.drawImage(spritesheet, 118, 982, 33, 23, this.x, this.y, this.width, this.height);
                 break;
         }
     }
+    drawBirdPosition(x, y) {
+        if (game.isGame)
+            ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
+        else {
+            ctx.save();
+            ctx.translate((canvas.width / 2), 0);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(spritesheet, x, y, 33, 23, this.y, this.x - bird.width, this.width, this.height);
+            ctx.restore();
+        }
+    }
+
     updatePosition() {
         this.position++;
         this.position === 9 ? this.position = 0 : null;
@@ -132,7 +145,7 @@ class Pipe {
     checkPosition(i) {
         this.x + this.width < 0 ? pipes[i] = new Pipe(canvas.width) : null;
 
-        game.isGame ? this.x === bird.x ? game.score++ : null : null;
+        game.isGame ? this.x === bird.x ? game.addScore() : null : null;
     }
 }
 
@@ -164,7 +177,7 @@ function gameLoop() {
     }
     else {
         bird.birdFall();
-       
+
     }
     for (let i = 0; i < 2; i++) {
         pipes[i].drawPipe();
@@ -176,7 +189,7 @@ function gameLoop() {
     bird.drawBird();
     if (game.isGame)
         floor.changePosition();
-    else 
+    else
         game.drawGameOver();
     floor.drawFloor();
     game.drawScore();
@@ -185,8 +198,8 @@ function gameLoop() {
 
 function newGame() {
     background = new Background(canvas.width, canvas.height, 'lightgreen')
-    bird = new Bird(200, canvas.width / 2 - 100, 50, 40, 1, 12, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
-    floor = new Floor(0, canvas.height - 100, canvas.width * 2, 120, 2) //(x, y, width, height, dx)
+    bird = new Bird(200, canvas.width * 0.25, 50, 40, 1, 12, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
+    floor = new Floor(0, canvas.height * 0.85, canvas.width * 2, 120, 2) //(x, y, width, height, dx)
     game = new Game(0);
     pipes = [];
 
