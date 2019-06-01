@@ -7,7 +7,7 @@ class Game {
     constructor(score) {
         this.score = score;
         this.isGame = true;
-        this.numberTab = [
+        this.numberTab = [      //cords from spritesheet [x,y,x width,y width]
             [992, 120, 23, 35], //0
             [268, 910, 15, 35],    //1
             [584, 320, 23, 35],    //2   
@@ -19,14 +19,16 @@ class Game {
             [640, 368, 23, 35],    //8  
             [668, 368, 23, 35]    //9
         ];
+
     }
     drawScore() {
         const num = this.score.toString();
-        for (let i = 0; i < num.length; i++)
-            ctx.drawImage(spritesheet, this.numberTab[num[i]][0], this.numberTab[num[i]][1], 23, 35, 170 + i * 25, 180, 23, 35);
+        for (let i = 0; i < num.length; i++)    //draw each number individually
+            ctx.drawImage(spritesheet, this.numberTab[num[i]][0], this.numberTab[num[i]][1], 23, 35, canvas.width * 0.48 + i * 25, 180, 23, 35);
     }
-    drawGameOver() {
-        ctx.drawImage(spritesheet, 785, 114, 202, 56, 100, 300, 202, 56);   // last 2 -(x, y)
+    drawGameOver() {                                                        // (spritesheet, x in spritesheet, y in spritesheet,width in spritesheet,
+        ctx.drawImage(spritesheet, 785, 114, 202, 56, canvas.width / 4, canvas.height * 0.4, 202, 56);   //height in spritesheet, position x, positiony, width ,height)
+
     }
     addScore() {
         this.score++;
@@ -34,17 +36,17 @@ class Game {
 }
 
 class Background {
-    constructor(width, height) {
+    constructor(width, height, background) {
         this.width = width;
         this.height = height;
-
+        this.background = background;
     }
     drawBackground() {
         ctx.clearRect(0, 0, this.width, this.height) //clears board
-        ctx.fillStyle = this.backgroundColor;
-
-        ctx.drawImage(spritesheet, 0, 0, 287, 511, 0, 0, canvas.width, canvas.height);   //day
-        // ctx.drawImage(spritesheet, 292, 0, 287, 511, 0, 0, canvas.width, canvas.height);    //night
+        if (this.background === 'day')
+            ctx.drawImage(spritesheet, 0, 0, 287, 511, 0, 0, canvas.width, canvas.height);   //day
+        else
+            ctx.drawImage(spritesheet, 292, 0, 287, 511, 0, 0, canvas.width, canvas.height);    //night
     }
 }
 
@@ -98,7 +100,7 @@ class Bird {
 
     updatePosition() {
         this.position++;
-        this.position === 9 ? this.position = 0 : null;
+        this.position === 9 ? this.position = 0 : null;     // implemented in order for the bird to change animation
         this.deltaTime < 0.6 ? this.deltaTime += (1 / 10) : null;
         this.y -= this.vert * this.deltaTime;
         this.vert -= this.gravity * this.deltaTime;
@@ -110,42 +112,39 @@ class Bird {
         }
     }
     checkPosition() {
-        this.y > floor.y - this.height ? game.isGame = false : null;
+        this.y > floor.y - this.height ? game.isGame = false : null;    //if bird hits the floor
     }
     checkCollision(pipe) {
-        (this.x > pipe.x && this.x < pipe.x + pipe.width) &&
+        (this.x > pipe.x && this.x < pipe.x + pipe.width) &&    //if bird hits one of the pipes
             !(this.y > pipe.y - pipe.space - 6 && this.y < pipe.y - this.height + 6) ? game.isGame = false : null;
     }
-    birdFall() {
+    birdFall() {    //make sure bird falls to the ground after hitting pipe
         this.y < floor.y - this.height ? this.y += this.gravity * 10 : null;
     }
 
 }
 
 class Pipe {
-    constructor(x, y, width, heightBottom, heightTop, space, speed) {
+    constructor(x) {
         this.space = 140;
         this.heightBottom = 400;
         this.heightTop = 300;
         this.x = x;         //lower pipe position
-        this.y = Math.floor(Math.random() * (canvas.height * 3 / 5 - canvas.height * 1 / 2 + 1)) + canvas.height * 1 / 2;
+        this.y = Math.floor(Math.random() * (canvas.height * 3 / 4 - canvas.height * 1 / 4 + 1)) + canvas.height * 1 / 4;
         this.width = 80;
         this.speed = 2;
 
     }
     drawPipe() {
-        ctx.beginPath();
-        ctx.drawImage(spritesheet, 112, 646, 51, 318, this.x, this.y - this.space - this.heightTop, this.width, this.heightTop)
-        // ctx.drawImage(this.imageTop, this.x, this.y - this.space - this.heightTop, this.width, this.heightTop); //top pipe
+        ctx.drawImage(spritesheet, 112, 646, 51, 318, this.x, this.y - this.space - this.heightTop, this.width, this.heightTop) //top pipe
         ctx.drawImage(spritesheet, 168, 646, 51, 318, this.x, this.y, this.width, this.heightBottom);  //bottom pipe
     }
     changePosition() {
         this.x -= this.speed;
     }
     checkPosition(i) {
-        this.x + this.width < 0 ? pipes[i] = new Pipe(canvas.width) : null;
-
-        game.isGame ? this.x === bird.x ? game.addScore() : null : null;
+        this.x + this.width < 0 ? pipes[i] = new Pipe(canvas.width) : null; //spawn new pipe after the old one leaves canvas area
+        game.isGame ? this.x === bird.x ? game.addScore() : null : null;    //increase score if bird moves through pipe
     }
 }
 
@@ -158,7 +157,6 @@ class Floor {
         this.height = height;
     }
     drawFloor() {
-        ctx.beginPath();
         ctx.drawImage(spritesheet, 584, 0, 335, 111, this.x, this.y, this.width, this.height);
 
     }
@@ -174,37 +172,44 @@ function gameLoop() {
     if (game.isGame) {
         bird.updatePosition();
         bird.checkPosition();
+        for (let i = 0; i < 2; i++) {
+            pipes[i].drawPipe();
+            pipes[i].changePosition();
+            pipes[i].checkPosition(i);
+            bird.checkCollision(pipes[i])
+        }
+        bird.drawBird();
+        floor.changePosition();
+        floor.drawFloor();
+        game.drawScore();
+        window.requestAnimationFrame(gameLoop);
     }
     else {
         bird.birdFall();
-
-    }
-    for (let i = 0; i < 2; i++) {
-        pipes[i].drawPipe();
-        if (game.isGame)
-            pipes[i].changePosition();
-        pipes[i].checkPosition(i);
-        bird.checkCollision(pipes[i])
-    }
-    bird.drawBird();
-    if (game.isGame)
-        floor.changePosition();
-    else
+        for (let i = 0; i < 2; i++) {
+            pipes[i].drawPipe();
+            pipes[i].checkPosition(i);
+            bird.checkCollision(pipes[i])
+        }
+        bird.drawBird();
         game.drawGameOver();
-    floor.drawFloor();
-    game.drawScore();
-    window.requestAnimationFrame(gameLoop);
+        floor.drawFloor();
+        game.drawScore();
+        window.requestAnimationFrame(gameLoop);
+    }
+
+
 }
 
 function newGame() {
-    background = new Background(canvas.width, canvas.height, 'lightgreen')
+    background = new Background(canvas.width, canvas.height, 'day')
     bird = new Bird(200, canvas.width * 0.25, 50, 40, 1, 12, 0); //(y, x, width, height, gravity, jumpSpeed, verticalSpeed)
     floor = new Floor(0, canvas.height * 0.85, canvas.width * 2, 120, 2) //(x, y, width, height, dx)
     game = new Game(0);
     pipes = [];
 
-    pipes[0] = new Pipe(canvas.width * 2); //x, y, width, heightTop, space, speed
-    pipes[1] = new Pipe(canvas.width * 2.6); //x, y, width,  space, speed
+    pipes[0] = new Pipe(canvas.width * 2); //x
+    pipes[1] = new Pipe(canvas.width * 2.6); //x
 
 
 }
@@ -235,8 +240,13 @@ spritesheetCheck.then(res => {
 window.addEventListener('keydown', (event) => {
     switch (event.keyCode) {
 
-        case 32:  //'left mouse button' key
+        case 32:  //'space' key
             bird.birdJump();
+            break;
+        case 82:  //'r' key
+        
+            if(game.isGame===false)    
+                newGame();
             break;
 
         default:
