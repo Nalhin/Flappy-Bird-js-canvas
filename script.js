@@ -1,5 +1,5 @@
-const canvas = document.getElementById("c");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
 
 let bird, pipes, game, floor, spritesheet;
 
