@@ -121,7 +121,6 @@ class Bird {
     birdFall() {    //make sure bird falls to the ground after hitting pipe
         this.y < floor.y - this.height ? this.y += this.gravity * 10 : null;
     }
-
 }
 
 class Pipe {
@@ -133,7 +132,6 @@ class Pipe {
         this.y = Math.floor(Math.random() * (canvas.height * 3 / 4 - canvas.height * 1 / 4 + 1)) + canvas.height * 1 / 4;
         this.width = 80;
         this.speed = 2;
-
     }
     drawPipe() {
         ctx.drawImage(spritesheet, 112, 646, 51, 318, this.x, this.y - this.space - this.heightTop, this.width, this.heightTop) //top pipe
@@ -167,7 +165,6 @@ class Floor {
 }
 
 function gameLoop() {
-
     background.drawBackground();
     if (game.isGame) {
         bird.updatePosition();
@@ -197,8 +194,6 @@ function gameLoop() {
         game.drawScore();
         window.requestAnimationFrame(gameLoop);
     }
-
-
 }
 
 function newGame() {
@@ -207,13 +202,9 @@ function newGame() {
     floor = new Floor(0, canvas.height * 0.85, canvas.width * 2, 120, 2) //(x, y, width, height, dx)
     game = new Game(0);
     pipes = [];
-
     pipes[0] = new Pipe(canvas.width * 2); //x
     pipes[1] = new Pipe(canvas.width * 2.6); //x
-
-
 }
-
 
 function asyncImageLoader(url) {
     return new Promise((resolve, reject) => {
@@ -235,22 +226,16 @@ spritesheetCheck.then(res => {
         console.log(res)
 })
 
-
-
 window.addEventListener('keydown', (event) => {
     switch (event.keyCode) {
-
         case 32:  //'space' key
             bird.birdJump();
             break;
         case 82:  //'r' key
-        
-            if(game.isGame===false)    
+            if (game.isGame === false)
                 newGame();
             break;
-
         default:
             break;
     }
-
 });

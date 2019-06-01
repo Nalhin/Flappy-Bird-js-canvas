@@ -1,15 +1,14 @@
-@font-face { 
-    font-family: "Press"; 
-   
-     src: url('PressStart2P.woff2');
-    
- }
+@font-face {
+    font-family: "Press";
+    src: url('PressStart2P.woff2');
+}
 
-body{
-     margin:0 auto;
-     width:400px;
-     background-color:dimgrey;
- }
- canvas{
-     padding-top:20px;
- }
+body {
+    margin: 0 auto;
+    width: 400px;
+    background-color: dimgrey;
+}
+
+canvas {
+    padding-top: 20px;
+}
