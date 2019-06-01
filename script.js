@@ -19,7 +19,6 @@ class Game {
             [640, 368, 23, 35],    //8  
             [668, 368, 23, 35]    //9
         ];
-
     }
     drawScore() {
         const num = this.score.toString();
@@ -28,7 +27,6 @@ class Game {
     }
     drawGameOver() {                                                        // (spritesheet, x in spritesheet, y in spritesheet,width in spritesheet,
         ctx.drawImage(spritesheet, 785, 114, 202, 56, canvas.width / 4, canvas.height * 0.4, 202, 56);   //height in spritesheet, position x, positiony, width ,height)
-
     }
     addScore() {
         this.score++;
@@ -156,7 +154,6 @@ class Floor {
     }
     drawFloor() {
         ctx.drawImage(spritesheet, 584, 0, 335, 111, this.x, this.y, this.width, this.height);
-
     }
     changePosition() {
         this.x -= this.dx;
