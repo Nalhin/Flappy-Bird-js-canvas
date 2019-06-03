@@ -103,7 +103,7 @@ class Bird {
                     ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
                     ctx.restore();
                     break;
-                case bird.vert > -20 && bird.vert <= 0:
+                case bird.vert >= -20 && bird.vert <= 0:
                     ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
                     break;
                 default:
