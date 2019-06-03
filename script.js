@@ -90,47 +90,55 @@ class Bird {
                 break;
         }
     }
-    drawBirdPosition(x, y) {
+    drawBirdPosition(x, y) { // needs fixing
         if (game.isGame) {
             //console.log(bird.vert)
-            if (bird.vert >= -12) {
+            //   if (bird.vert >= -12) {
+            if (game.isStarted) {
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(-this.vert * Math.PI / 60);
+                ctx.rotate((-this.vert - 5) * Math.PI / 60);
                 ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
                 ctx.restore();
             }
             else {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(Math.PI * 1 / 4);
-                ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
-                ctx.restore();
+                ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
+
             }
-            /*
-            switch (true) {
-               
-                case bird.vert < -20:
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(Math.PI * 1 / 4);
-                    ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
-                    ctx.restore();
-                    break;
-                case bird.vert > 0:
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(Math.PI * 7/ 4);
-                    ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
-                    ctx.restore();
-                    break;
-                case bird.vert >= -20 && bird.vert <= 0:
-                    ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
-                    break;
-                default:
-                    break;
-            }*/
         }
+                /*  }
+                  else {
+                      ctx.save();
+                      ctx.translate(this.x, this.y);
+                      ctx.rotate(Math.PI * 1 / 4);
+                      ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                      ctx.restore();
+                  }*/
+                /*
+                switch (true) {
+                   
+                    case bird.vert < -20:
+                        ctx.save();
+                        ctx.translate(this.x, this.y);
+                        ctx.rotate(Math.PI * 1 / 4);
+                        ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                        ctx.restore();
+                        break;
+                    case bird.vert > 0:
+                        ctx.save();
+                        ctx.translate(this.x, this.y);
+                        ctx.rotate(Math.PI * 7/ 4);
+                        ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                        ctx.restore();
+                        break;
+                    case bird.vert >= -20 && bird.vert <= 0:
+                        ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
+                        break;
+                    default:
+                        break;
+                }*/
+            
+        
         else {
             ctx.save();
             ctx.translate(this.x, this.y);
