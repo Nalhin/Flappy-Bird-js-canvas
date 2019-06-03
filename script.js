@@ -223,21 +223,6 @@ spritesheetCheck.then(res => {
         console.log(res)
 })
 
-window.addEventListener('keydown', (event) => {
-    switch (event.keyCode) {
-        case 32:  //'space' key
-            bird.birdJump();
-            break;
-        case 82:  //'r' key
-            if (game.isGame === false)
-                newGame();
-            break;
-        default:
-            break;
-    }
-});
-
-
 if (navigator.userAgent.match(/Android/i)   //mobile detection
     || navigator.userAgent.match(/webOS/i)
     || navigator.userAgent.match(/iPhone/i)
@@ -245,9 +230,26 @@ if (navigator.userAgent.match(/Android/i)   //mobile detection
     || navigator.userAgent.match(/iPod/i)
     || navigator.userAgent.match(/BlackBerry/i)
     || navigator.userAgent.match(/Windows Phone/i)) {
+
     window.addEventListener('touchstart', (event) => {
         bird.birdJump();
         if (game.isGame === false)
             newGame();
     });
 }
+else {
+    window.addEventListener('keydown', (event) => {
+        switch (event.keyCode) {
+            case 32:  //'space' key
+                bird.birdJump();
+                break;
+            case 82:  //'r' key
+                if (game.isGame === false)
+                    newGame();
+                break;
+            default:
+                break;
+        }
+    });
+}
+
