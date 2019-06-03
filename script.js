@@ -19,6 +19,7 @@ class Game {
             [640, 368, 23, 35],    //8  
             [668, 368, 23, 35]    //9
         ];
+        this.isStarted = false;
     }
     drawScore() {
         const num = this.score.toString();
@@ -62,6 +63,7 @@ class Bird {
         this.position = 1;
     }
     drawBird() {
+        this.position++;
         ctx.beginPath();
         switch (this.position % 9) {
             case 0:
@@ -101,7 +103,7 @@ class Bird {
                     ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
                     ctx.restore();
                     break;
-                case bird.vert > -20 && bird.vert < 0:
+                case bird.vert > -20 && bird.vert <= 0:
                     ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
                     break;
                 default:
@@ -118,7 +120,7 @@ class Bird {
     }
 
     updatePosition() {
-        this.position++;
+        
         this.position === 9 ? this.position = 0 : null;     // implemented in order for the bird to change animation
         this.deltaTime < 0.6 ? this.deltaTime += (1 / 10) : null;
         this.y -= this.vert * this.deltaTime;
@@ -184,7 +186,17 @@ class Floor {
 
 function gameLoop() {
     background.drawBackground();
-    if (game.isGame) {
+    if(!game.isStarted)
+    {
+        
+        floor.changePosition();
+        floor.drawFloor();
+        bird.drawBird();
+        game.drawScore();
+        window.requestAnimationFrame(gameLoop);
+    
+    }
+    else if (game.isStarted&&game.isGame) {
         bird.updatePosition();
         bird.checkPosition();
         for (let i = 0; i < 2; i++) {
@@ -263,6 +275,7 @@ else {
         switch (event.keyCode) {
             case 32:  //'space' key
                 bird.birdJump();
+                game.isStarted === false ? game.isStarted = true : null;
                 break;
             case 82:  //'r' key
                 if (game.isGame === false)
