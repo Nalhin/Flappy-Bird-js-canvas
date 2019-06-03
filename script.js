@@ -85,7 +85,7 @@ class Bird {
         }
     }
     drawBirdPosition(x, y) {
-        if (game.isGame)
+        if (bird.vert > -20 && game.isGame)
             ctx.drawImage(spritesheet, x, y, 33, 23, this.x, this.y, this.width, this.height);
         else {
             ctx.save();
