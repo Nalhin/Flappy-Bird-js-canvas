@@ -99,7 +99,7 @@ class Bird {
                 case bird.vert > 0:
                     ctx.save();
                     ctx.translate(this.x, this.y);
-                    ctx.rotate(Math.PI * -1 / 8);
+                    ctx.rotate(Math.PI * 5/ 8);
                     ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
                     ctx.restore();
                     break;
