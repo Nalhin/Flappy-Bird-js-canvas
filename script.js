@@ -188,7 +188,7 @@ function gameLoop() {
     background.drawBackground();
     if(!game.isStarted)
     {
-        
+     
         floor.changePosition();
         floor.drawFloor();
         bird.drawBird();
@@ -266,6 +266,7 @@ if (navigator.userAgent.match(/Android/i)   //mobile detection
 
     window.addEventListener('touchstart', (event) => {
         bird.birdJump();
+        game.isStarted === false ? game.isStarted = true : null;
         if (game.isGame === false)
             newGame();
     });
