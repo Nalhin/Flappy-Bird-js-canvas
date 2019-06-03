@@ -79,7 +79,7 @@ class Bird {
                 // ctx.drawImage(spritesheet, 62, 982, 33, 23, this.x, this.y, this.width, this.height);
                 break;
             case 6:
-            case 7:
+            case 7:  
             case 8:
                 this.drawBirdPosition(118, 982)
                 //   ctx.drawImage(spritesheet, 118, 982, 33, 23, this.x, this.y, this.width, this.height);
@@ -88,7 +88,25 @@ class Bird {
     }
     drawBirdPosition(x, y) {
         if (game.isGame) {
+            //console.log(bird.vert)
+           if(bird.vert>=-12)
+           {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(-this.vert*Math.PI/60);
+            ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+            ctx.restore();
+           }
+            else{
+                ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(Math.PI*1/4);
+            ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+            ctx.restore();
+            }
+            /*
             switch (true) {
+               
                 case bird.vert < -20:
                     ctx.save();
                     ctx.translate(this.x, this.y);
@@ -99,7 +117,7 @@ class Bird {
                 case bird.vert > 0:
                     ctx.save();
                     ctx.translate(this.x, this.y);
-                    ctx.rotate(Math.PI * 5/ 8);
+                    ctx.rotate(Math.PI * 7/ 4);
                     ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
                     ctx.restore();
                     break;
@@ -108,7 +126,7 @@ class Bird {
                     break;
                 default:
                     break;
-            }
+            }*/
         }
         else {
             ctx.save();
