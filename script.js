@@ -28,6 +28,10 @@ class Game {
     }
     drawGameOver() {                                                        // (spritesheet, x in spritesheet, y in spritesheet,width in spritesheet,
         ctx.drawImage(spritesheet, 785, 114, 202, 56, canvas.width / 4, canvas.height * 0.4, 202, 56);   //height in spritesheet, position x, positiony, width ,height)
+        const image = new Image();
+        image.src = 'images/restart.png';
+        ctx.drawImage(image, canvas.width / 4, canvas.height / 2, canvas.width / 4, canvas.height / 16);
+
     }
     addScore() {
         this.score++;
@@ -79,7 +83,7 @@ class Bird {
                 // ctx.drawImage(spritesheet, 62, 982, 33, 23, this.x, this.y, this.width, this.height);
                 break;
             case 6:
-            case 7:  
+            case 7:
             case 8:
                 this.drawBirdPosition(118, 982)
                 //   ctx.drawImage(spritesheet, 118, 982, 33, 23, this.x, this.y, this.width, this.height);
@@ -89,20 +93,19 @@ class Bird {
     drawBirdPosition(x, y) {
         if (game.isGame) {
             //console.log(bird.vert)
-           if(bird.vert>=-12)
-           {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(-this.vert*Math.PI/60);
-            ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
-            ctx.restore();
-           }
-            else{
+            if (bird.vert >= -12) {
                 ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(Math.PI*1/4);
-            ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
-            ctx.restore();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(-this.vert * Math.PI / 60);
+                ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                ctx.restore();
+            }
+            else {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(Math.PI * 1 / 4);
+                ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                ctx.restore();
             }
             /*
             switch (true) {
@@ -138,7 +141,7 @@ class Bird {
     }
 
     updatePosition() {
-        
+
         this.position === 9 ? this.position = 0 : null;     // implemented in order for the bird to change animation
         this.deltaTime < 0.6 ? this.deltaTime += (1 / 10) : null;
         this.y -= this.vert * this.deltaTime;
@@ -204,17 +207,16 @@ class Floor {
 
 function gameLoop() {
     background.drawBackground();
-    if(!game.isStarted)
-    {
-     
+    if (!game.isStarted) {
+
         floor.changePosition();
         floor.drawFloor();
         bird.drawBird();
         game.drawScore();
         window.requestAnimationFrame(gameLoop);
-    
+
     }
-    else if (game.isStarted&&game.isGame) {
+    else if (game.isStarted && game.isGame) {
         bird.updatePosition();
         bird.checkPosition();
         for (let i = 0; i < 2; i++) {
@@ -274,6 +276,8 @@ spritesheetCheck.then(res => {
         console.log(res)
 })
 
+
+
 if (navigator.userAgent.match(/Android/i)   //mobile detection
     || navigator.userAgent.match(/webOS/i)
     || navigator.userAgent.match(/iPhone/i)
@@ -282,11 +286,14 @@ if (navigator.userAgent.match(/Android/i)   //mobile detection
     || navigator.userAgent.match(/BlackBerry/i)
     || navigator.userAgent.match(/Windows Phone/i)) {
 
-    window.addEventListener('touchstart', (event) => {
+    canvas.addEventListener('touchstart', (event) => {
         bird.birdJump();
         game.isStarted === false ? game.isStarted = true : null;
-        if (game.isGame === false)
-            newGame();
+        if (!game.isGame) {
+            (event.touches[0].pageX > canvas.width / 4 && event.touches[0].pageX < canvas.width / 2 &&
+                event.touches[0].pageY > canvas.height / 2 && event.touches[0].pageY < canvas.height * 9 / 16) ?
+                newGame() : null;
+        }
     });
 }
 else {
@@ -297,11 +304,21 @@ else {
                 game.isStarted === false ? game.isStarted = true : null;
                 break;
             case 82:  //'r' key
-                if (game.isGame === false)
+                if (!game.isGame)
                     newGame();
                 break;
             default:
                 break;
+        }
+    });
+    canvas.addEventListener('click', (event) => {
+        bird.birdJump();
+        game.isStarted === false ? game.isStarted = true : null;
+        if (!game.isGame) {
+            (event.layerX > canvas.width / 4 && event.layerX < canvas.width / 2 &&
+                event.layerY > canvas.height / 2 && event.layerY < canvas.height * 9 / 16) ?
+                newGame() : null;
+
         }
     });
 }
