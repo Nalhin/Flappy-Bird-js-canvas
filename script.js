@@ -98,16 +98,16 @@ class Bird {
 
                 if (this.vert > 0) {
                     ctx.save();
-                    ctx.translate(this.x, this.y);
+                    ctx.translate(this.x+this.width/2, this.y+this.height/2);
                     ctx.rotate(Math.PI * 7.5 / 4);
-                    ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                    ctx.drawImage(spritesheet, x, y, 33, 23, -this.width/2, -this.height/2, this.width, this.height);
                     ctx.restore();
                 }
                 else if (this.vert <= 0) {
                     ctx.save();
-                    ctx.translate(this.x, this.y);
+                    ctx.translate(this.x+this.width/2, this.y+this.height/2);
                     ctx.rotate((-this.vert) * Math.PI / 75);
-                    ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+                    ctx.drawImage(spritesheet, x, y, 33, 23, -this.width/2, -this.height/2, this.width, this.height);
                     ctx.restore();
                 }
                
@@ -119,9 +119,9 @@ class Bird {
         }
         else {
             ctx.save();
-            ctx.translate(this.x, this.y);
+            ctx.translate(this.x+this.width/2, this.y+this.height/2);
             ctx.rotate(Math.PI * 1 / 2);
-            ctx.drawImage(spritesheet, x, y, 33, 23, 0, 0, this.width, this.height);
+            ctx.drawImage(spritesheet, x, y, 33, 23, -this.width/2, -this.height/2, this.width, this.height);
             ctx.restore();
         }
     }
