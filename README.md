@@ -1,7 +1,15 @@
-# Flappy-Bird-js-canvas
-Flappy bird in js canvas
-</br>Press "space" to jump
-</br>"r" to restart
-</br><a href="https://nalhin.github.io/Flappy-Bird-js-canvas/"><b>live link</b></a>
-</br>![](images/flappy.jpg)
+# Flappy Bird
+
+Flappy Bird clone rendered on HTML5 canvas.
+
+![Flappy Bird](showcase/flappy.jpg)
+
+## How to play
+
+- Press "space" to jump.
+- Press "r" to restart.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
 
